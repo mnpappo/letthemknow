@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -46,29 +47,36 @@
         chart.draw(data, options);
       }
 
-      var geocoder;
       function initMap() {
         geocoder = new google.maps.Geocoder;
+      }
 
-        var latlng = {
-          lat: 23.9270671, 
-          lng: 90.7147926
-          };
+      function getPosition() {
+        return new Promise((res, rej) => {
+          navigator.geolocation.getCurrentPosition(res, rej);
+        });
+      }
 
-        geocoder.geocode(
-          {
-          'location': latlng,
-          }, 
+      
+
+      async function main() {
+        var position = await getPosition();  // wait for getPosition to complete
+
+        var coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+
+        geocoder.geocode( { 'location': coords, }, 
           function(results, status) {
             if (status === 'OK') {
-              var filtered_array = results[0].address_components.filter(function(address_component){
-                  return address_component.types.includes("administrative_area_level_2");
-              }); 
-              var district = filtered_array.length ? filtered_array[0].long_name: "";
-              console.log(district)
-
               if (results[0]) {
-                console.log(results[0].formatted_address);
+                var filtered_array = results[0].address_components.filter(function(address_component){
+                  return address_component.types.includes("administrative_area_level_2");
+                }); 
+                district = filtered_array.length ? filtered_array[0].long_name: "";
+                callApi(coords, district, results[0].formatted_address);
+                document.getElementById("info").innerHTML = `Current Location: ${results[0].formatted_address}`;
               } else {
                 window.alert('No results found');
               }
@@ -78,40 +86,27 @@
           });
       }
 
-      {% comment %} var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-      };
+      function callApi(coords, district, address) {
+        console.log(coords)
+        console.log(district)
+        console.log(address)
+      }
 
-      function success(pos) {
-        const crd = pos.coords;
 
-        var latlng = {
-          lat: 23.9194805, 
-          lng: 90.7084894
-          };
+      $(document).ready(function(){
+        $(':radio[name="radio-button"]').change(function() {
+          var state = $(this).filter(':checked').val();
+          console.log(state);
+          //$(this).attr('disabled',true);
 
-        geocoder.geocode({'location': latlng}, function(results, status) {
-          if (status === 'OK') {
-            console.log(results);
-            if (results[0]) {
-              console.log(results[0].formatted_address);
-            } else {
-              window.alert('No results found');
-            }
+          if(navigator.geolocation) {
+            main()
           } else {
-            window.alert('Geocoder failed due to: ' + status);
+            document.getElementById("info").innerHTML = 'Geolocation is not supported by this device';
           }
+          
         });
-      }
-
-      function error(err) {
-        console.warn(`ERROR(${err.code}): ${err.message}`);
-      }
-
-      navigator.geolocation.getCurrentPosition(success, error, options); {% endcomment %}
-
+      });
       
 
 
@@ -144,28 +139,36 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-8">
+                <div>
+                  <div id="info" class="alert alert-info" role="alert">
+                    Please share your location to submit your response.
+                  </div>
+                </div>
                 
-                <div id="regions_div"></div>
+                
+                <div id="regions_div">
+
+                </div>
             </div>
             <div class="col-sm-4">
 
                 <div class="frb-group">
                   <div class="frb frb-success">
-                    <input type="radio" id="radio-button-2" name="radio-button" value="2">
+                    <input type="radio" id="radio-button-2" name="radio-button" value="1">
                     <label for="radio-button-2">
                       <span class="frb-title">I am Safe</span>
                       <span class="frb-description">I think I am safe. I can manage it.</span>
                     </label>
                   </div>
                   <div class="frb frb-warning">
-                    <input type="radio" id="radio-button-4" name="radio-button" value="4">
+                    <input type="radio" id="radio-button-4" name="radio-button" value="2">
                     <label for="radio-button-4">
                       <span class="frb-title">I am Panicked!</span>
                       <span class="frb-description">I am panicked! I dont know what to do.</span>
                     </label>
                   </div>
                   <div class="frb frb-danger">
-                    <input type="radio" id="radio-button-5" name="radio-button" value="5">
+                    <input type="radio" id="radio-button-5" name="radio-button" value="3">
                     <label for="radio-button-5">
                       <span class="frb-title">I am Effected!!</span>
                       <span class="frb-description">I think I am effected! Help!!</span>
@@ -179,7 +182,6 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIHUCyaqDFq-oCGWz6dMTN5oybhSeoOms&callback=initMap" async defer></script>
