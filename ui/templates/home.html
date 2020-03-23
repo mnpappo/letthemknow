@@ -68,7 +68,7 @@
           position = await this.getPosition({
             enableHighAccuracy: true,
             timeout: 5000,
-            maximumAge: 0
+            maximumAge: 36000
           });
 
           var coords = {
@@ -102,6 +102,7 @@
               }
             });
         } catch (e) {
+          console.log(e)
           if (e.name == 'PositionError') {
             console.log(e.message + ". code = " + e.code);
             var settings = {
@@ -187,7 +188,9 @@
         $(':radio[name="radio-button"]').change(function() {
           var state = $(this).filter(':checked').val();
           if(navigator.geolocation) {
+            console.log("clicked")
             main(state);
+            
           } else {
             document.getElementById("info").innerHTML = 'Geolocation is not supported by this device';
           }
@@ -230,7 +233,7 @@
         <div class="row">
             <div class="col-sm-8">
                 <div>
-                  <div id="info" class="alert alert-info" role="alert">
+                  <div id="info" class="alert alert-info small" role="alert">
                     {% if position.address and position.user_id %}
                       Your ID: {{ position.user_id }}, District: {{ position.district }} <br />
                       Possible Position: {{ position.address }}
@@ -240,9 +243,9 @@
                   </div>
                 </div>
 
-                {% for row in final_list %}
+                {% comment %} {% for row in final_list %}
                   <p>{{ row.division_code }}, {{ row.division_name }}, {{ row.safe_count }}, {{ row.panicked_count }}, {{ row.affected_count }}</p>
-                {% endfor %}
+                {% endfor %} {% endcomment %}
                 
                 
                 <div id="regions_div">
@@ -254,21 +257,21 @@
                 <div class="frb-group">
                   <div class="frb frb-success">
                     <input type="radio" id="radio-button-1" name="radio-button" value="1" {% if position.state == '1' %} checked="checked" {% endif %} >
-                    <label for="radio-button-2">
+                    <label for="radio-button-1">
                       <span class="frb-title">I am Safe</span>
                       <span class="frb-description">I think I am safe. I can manage it.</span>
                     </label>
                   </div>
                   <div class="frb frb-warning">
                     <input type="radio" id="radio-button-2" name="radio-button" value="2" {% if position.state == '2' %} checked="checked" {% endif %} >
-                    <label for="radio-button-4">
+                    <label for="radio-button-2">
                       <span class="frb-title">I am Panicked!</span>
                       <span class="frb-description">I am panicked! I dont know what to do.</span>
                     </label>
                   </div>
                   <div class="frb frb-danger">
                     <input type="radio" id="radio-button-3" name="radio-button" value="3" {% if position.state == '3' %} checked="checked" {% endif %} >
-                    <label for="radio-button-5">
+                    <label for="radio-button-3">
                       <span class="frb-title">I am Affected!!</span>
                       <span class="frb-description">I think I am affected! Help!!</span>
                     </label>
