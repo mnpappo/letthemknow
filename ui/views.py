@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Position
 from .tuple_and_dictionaries import *
-
+import requests
 
 def home(request):
     user_id = request.session.get('user_id', 0)
@@ -15,9 +15,14 @@ def home(request):
     context = {
         'user_id': position.user_id,
     }
-    print(division_code_dic)
-    print(district_code_dic)
-    print(district_division_dic)
+    result = requests.get('https://corona.lmao.ninja/countries/bangladesh')
+    print(type(result.json()))
+    print(result.json())
+    print("total cases "+ str(result.json()['cases']))
+
+    # print(division_code_dic)
+    # print(district_code_dic)
+    # print(district_division_dic)
     return render(request, 'home.html', context=context)
 
 
