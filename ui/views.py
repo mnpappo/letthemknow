@@ -1,15 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Position
-
-# Create your views here.
-# def home(request):
-#     template = loader.get_template('home.html')
-#     context = {
-#         'x': 'hello',
-#     }
-#     return HttpResponse(template.render(context, request))
+from .tuple_and_dictionaries import *
 
 
 def home(request):
@@ -22,5 +15,46 @@ def home(request):
     context = {
         'user_id': position.user_id,
     }
-
+    print(division_code_dic)
+    print(district_code_dic)
+    print(district_division_dic)
     return render(request, 'home.html', context=context)
+
+
+def update(request):
+    state = request.GET.get('state')
+    lat = float(request.GET.get('lat'))
+    lng = float(request.GET.get('lng'))
+    district = request.GET.get('district')
+    division = request.GET.get('division')
+    address = request.GET.get('address')
+    division = division.split()[0]
+    district = district.split()[0]
+
+    user_id = request.session.get('user_id', None)
+    if user_id == None:
+        position = Position.objects.create(user_id=user_id,
+                                           latitude=lat,
+                                           longitude=lng,
+                                           state=state,
+                                           district=district,
+                                           division=division,
+                                           address=address,
+                                           )
+    else:
+        position = Position.objects.get(user_id=user_id)
+        position.latitude = lat
+        position.longitude = lng
+        position.state = state
+        position.division = division
+        position.district = district
+        position.address = address
+    request.session['user_id'] = position.user_id
+
+    data = {
+        'address': position.address,
+        'lat': position.latitude,
+        'lng': position.longitude,
+        'state': position.state,
+    }
+    return JsonResponse(data)
