@@ -19,7 +19,7 @@ body {
 }
 
 .frb ~ .frb {
-    margin-top: 15px;
+    /* margin-top: 15px; */
 }
 
 .frb input[type="radio"]:empty,
