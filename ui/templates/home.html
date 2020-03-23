@@ -84,7 +84,14 @@
                     return address_component.types.includes("administrative_area_level_2");
                   }); 
                   district = filtered_array.length ? filtered_array[0].long_name: "";
-                  callApi(state, coords, district, results[0].formatted_address);
+
+                  var div_filtered_array = results[0].address_components.filter(function(address_component){
+                    return address_component.types.includes("administrative_area_level_1");
+                  }); 
+                  division = div_filtered_array.length ? div_filtered_array[0].long_name: "";
+
+                  callApi(state, coords, division, district, results[0].formatted_address);
+
                   document.getElementById("info").innerHTML = `Current Location: ${results[0].formatted_address}`;
                 } else {
                   window.alert('No results found');
@@ -118,7 +125,14 @@
                         return address_component.types.includes("administrative_area_level_2");
                       }); 
                       district = filtered_array.length ? filtered_array[0].long_name: "";
-                      callApi(state, coords, district, results[0].formatted_address);
+
+                      var div_filtered_array = results[0].address_components.filter(function(address_component){
+                        return address_component.types.includes("administrative_area_level_1");
+                      }); 
+                      division = div_filtered_array.length ? div_filtered_array[0].long_name: "";
+
+                      callApi(state, coords, division, district, results[0].formatted_address);
+
                       document.getElementById("info").innerHTML = `Current Location: ${results[0].formatted_address}`;
                     } else {
                       window.alert('No results found');
@@ -134,9 +148,10 @@
         
       }
 
-      function callApi(state, coords, district, address) {
+      function callApi(state, coords, division, district, address) {
         console.log(state)
         console.log(coords)
+        console.log(division)
         console.log(district)
         console.log(address)
       }
