@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> {% endcomment %}
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 
@@ -23,15 +24,15 @@
       function drawRegionsMap() {
         // ISO 3166-2 Code
         var data = google.visualization.arrayToDataTable([
-          ['Provinces', 'City Name' , 'Users'],
-          ['BD-A', 'Barisal', 20],
-          ['BD-B', 'Chittagong', 300],
-          ['BD-C', 'Dhaka', 400],
-          ['BD-D', 'Khulna', 500],
-          ['BD-H', 'Mymensingh', 600],
-          ['BD-E', 'Rajshahi', 700],
-          ['BD-F', 'Rangpur', 300],
-          ['BD-G', 'Sylhet', 500],
+          ['Provinces', 'City Name' , 'Value',  {role: 'tooltip', p:{html:true}}],
+          ['BD-A', 'Barisal', 21, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-B', 'Chittagong', 324, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-C', 'Dhaka', 900, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-D', 'Khulna', 32, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-H', 'Mymensingh', 456, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-E', 'Rajshahi', 2176, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-F', 'Rangpur', 674, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+          ['BD-G', 'Sylhet', 2123, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
         ]);
 
         var options = {
@@ -39,7 +40,10 @@
           resolution: 'provinces',
           dataMode: 'regions',
           colors: ['#28a745', '#ffc107', '#dc3545'],
-          legend:  {textStyle: {color: 'blue', fontSize: 16}}
+          legend:  {textStyle: {color: 'blue', fontSize: 16}},
+          tooltip: {
+            isHtml: true
+          }
         };
 
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
@@ -165,7 +169,7 @@
 
         // ajax call
         $.ajax({
-          url: '{% url 'update' %}',
+          {% comment %} url: '{% url 'update' %}', {% endcomment %}
           data: {
             'state': state,
             'lat': coords.lat,
@@ -264,8 +268,8 @@
                   <div class="frb frb-danger">
                     <input type="radio" id="radio-button-5" name="radio-button" value="3">
                     <label for="radio-button-5">
-                      <span class="frb-title">I am Effected!!</span>
-                      <span class="frb-description">I think I am effected! Help!!</span>
+                      <span class="frb-title">I am Affected!!</span>
+                      <span class="frb-description">I think I am affected! Help!!</span>
                     </label>
                   </div>
                 </div>
@@ -277,7 +281,9 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    {% comment %} <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> {% endcomment %}
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+    <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIHUCyaqDFq-oCGWz6dMTN5oybhSeoOms&callback=initMap" async defer></script>
   </body>
 </html>
