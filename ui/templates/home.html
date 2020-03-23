@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> {% endcomment %}
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -62,8 +61,6 @@
             options);
           });
       };
-
-      
 
       async function main(state) {
         var position;
@@ -182,7 +179,6 @@
         });
       }
 
-
       $(document).ready(function(){
         $('#refresh').click(function(){
           window.location.reload(true);
@@ -206,6 +202,11 @@
     <title>Let Them Know</title>
   </head>
   <body>
+    <div id="overlay">
+      <div class="cv-spinner">
+        <span class="spinner"></span>
+      </div>
+    </div>
     <nav class="navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Let Them Know</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
@@ -222,14 +223,6 @@
             <button id="refresh" type="button" class="btn btn-primary" aria-label="Left Align">
               <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh
             </button>
-        <h1> address : {{ position.address }}</h1>
-        <h1> User id: {{ position.user_id }}</h1>
-        <h1>lat: {{ position.latitude }}</h1>
-        <h1>district: {{ position.district }}</h1>
-        {% for row in final_list %}
-            <p>{{ row.division_code }}, {{ row.division_name }}, {{ row.safe_count }}, {{ row.panicked_count }}, {{ row.affected_count }}</p>
-        {% endfor %}
-
         </div> 
     </nav>
 
@@ -238,9 +231,18 @@
             <div class="col-sm-8">
                 <div>
                   <div id="info" class="alert alert-info" role="alert">
-                    Please share your location to submit your response.
+                    {% if position.address and position.user_id %}
+                      Your ID: {{ position.user_id }}, District: {{ position.district }} <br />
+                      Possible Position: {{ position.address }}
+                    {% else %}
+                      Please share your location to submit your response.
+                    {% endif %}
                   </div>
                 </div>
+
+                {% for row in final_list %}
+                  <p>{{ row.division_code }}, {{ row.division_name }}, {{ row.safe_count }}, {{ row.panicked_count }}, {{ row.affected_count }}</p>
+                {% endfor %}
                 
                 
                 <div id="regions_div">
@@ -251,21 +253,21 @@
 
                 <div class="frb-group">
                   <div class="frb frb-success">
-                    <input type="radio" id="radio-button-2" name="radio-button" value="1">
+                    <input type="radio" id="radio-button-1" name="radio-button" value="1" {% if position.state == '1' %} checked="checked" {% endif %} >
                     <label for="radio-button-2">
                       <span class="frb-title">I am Safe</span>
                       <span class="frb-description">I think I am safe. I can manage it.</span>
                     </label>
                   </div>
                   <div class="frb frb-warning">
-                    <input type="radio" id="radio-button-4" name="radio-button" value="2">
+                    <input type="radio" id="radio-button-2" name="radio-button" value="2" {% if position.state == '2' %} checked="checked" {% endif %} >
                     <label for="radio-button-4">
                       <span class="frb-title">I am Panicked!</span>
                       <span class="frb-description">I am panicked! I dont know what to do.</span>
                     </label>
                   </div>
                   <div class="frb frb-danger">
-                    <input type="radio" id="radio-button-5" name="radio-button" value="3">
+                    <input type="radio" id="radio-button-3" name="radio-button" value="3" {% if position.state == '3' %} checked="checked" {% endif %} >
                     <label for="radio-button-5">
                       <span class="frb-title">I am Affected!!</span>
                       <span class="frb-description">I think I am affected! Help!!</span>
@@ -280,7 +282,6 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    {% comment %} <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> {% endcomment %}
     <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
     <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIHUCyaqDFq-oCGWz6dMTN5oybhSeoOms&callback=initMap" async defer></script>
