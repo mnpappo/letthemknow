@@ -5,24 +5,27 @@ from .models import Position
 from .tuple_and_dictionaries import *
 import requests
 
+
 def home(request):
     user_id = request.session.get('user_id', 0)
     if user_id == 0:
-        position = Position.objects.create(latitude=12.3333, longitude=13.4444)
+        position = Position.objects.create()
     else:
         position = Position.objects.get(user_id=user_id)
     request.session['user_id'] = position.user_id
     context = {
-        'user_id': position.user_id,
+        'position': position,
     }
+
+
+
+    final_list = []
+
     result = requests.get('https://corona.lmao.ninja/countries/bangladesh')
     print(type(result.json()))
     print(result.json())
-    print("total cases "+ str(result.json()['cases']))
+    print("total cases " + str(result.json()['cases']))
 
-    # print(division_code_dic)
-    # print(district_code_dic)
-    # print(district_division_dic)
     return render(request, 'home.html', context=context)
 
 
@@ -38,8 +41,7 @@ def update(request):
 
     user_id = request.session.get('user_id', None)
     if user_id == None:
-        position = Position.objects.create(user_id=user_id,
-                                           latitude=lat,
+        position = Position.objects.create(latitude=lat,
                                            longitude=lng,
                                            state=state,
                                            district=district,
@@ -47,6 +49,7 @@ def update(request):
                                            address=address,
                                            )
     else:
+        print("Etatei")
         position = Position.objects.get(user_id=user_id)
         position.latitude = lat
         position.longitude = lng
@@ -54,6 +57,7 @@ def update(request):
         position.division = division
         position.district = district
         position.address = address
+        position.save()
     request.session['user_id'] = position.user_id
 
     data = {

@@ -1,6 +1,6 @@
-STATE_LIST = (('safe', 'safe'),
-              ('panicked', 'panicked'),
-              ('affected', 'affected'))
+STATE_LIST = ((1, 'I am Safe'),
+              (2, 'I am Panicked!'),
+              (3, 'I am Affected!!'))
 
 DIVISION_LIST = (('dhaka', 'Dhaka'),
                  ('chittagong', 'Chittagong'),
@@ -39,7 +39,7 @@ district_code_dic = {
     'Comilla': 'BD-08',
     'Cox\'s Bazar': 'BD-11',
     'Dhaka': 'BD-13',
-    'Dinajpur':'BD-14',
+    'Dinajpur': 'BD-14',
     'Faridpur': 'BD-15',
     'Feni': 'BD-16',
     'Gaibandha': 'BD-19',
@@ -49,7 +49,7 @@ district_code_dic = {
     'Jamalpur': 'BD-21',
     'Jessore': 'BD-22',
     'Jhalakathi': 'BD-25',
-    'Jhenaidah':'BD-23',
+    'Jhenaidah': 'BD-23',
     'Joypurhat': 'BD-24',
     'Khagrachhari': 'BD-29',
     'Khulna': 'BD-27',
