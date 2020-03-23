@@ -149,19 +149,27 @@
       }
 
       function callApi(state, coords, division, district, address) {
-        console.log(state)
-        console.log(coords)
-        console.log(division)
-        console.log(district)
-        console.log(address)
+        {#console.log(state)#}
+        {#console.log(coords)#}
+        var lat_lng = coords
+        console.log(lat_lng.lat)
+        console.log(typeof(lat_lng.lat))
+        var json = JSON.stringify(lat_lng);
+        {#console.log(Object.keys(lat_lng));#}
+        {#console.log(typeof(lat_lng))#}
+        {#console.log(typeof(district))#}
+
+        {#console.log(division)#}
+        {#console.log(district)#}
+        {#console.log(address)#}
 
         // ajax call
         $.ajax({
           url: '{% url 'update' %}',
           data: {
             'state': state,
-            'lat': coords.latitude,
-            'lng': coords.longitude,
+            'lat': coords.lat,
+            'lng': coords.lng,
             'division': division,
             'district': district,
             'address': address
