@@ -6,6 +6,15 @@ from .tuple_and_dictionaries import *
 import requests
 
 
+class Row:
+    def __init__(self, division_code, division_name, safe_count, panicked_count, affected_count ):
+        self.division_code = division_code,
+        self.division_name = division_name,
+        self.safe_count = safe_count,
+        self.panicked_count = panicked_count,
+        self.affected_count = affected_count,
+
+
 def home(request):
     user_id = request.session.get('user_id', 0)
     if user_id == 0:
@@ -13,18 +22,30 @@ def home(request):
     else:
         position = Position.objects.get(user_id=user_id)
     request.session['user_id'] = position.user_id
-    context = {
-        'position': position,
-    }
-
-
 
     final_list = []
+    position_list = Position.objects.all()
+    division_list = list(division_code_dic.keys())
+    for div in division_list:
+        safe_count = Position.objects.filter(division__exact=div, state__exact='1').count()
+        panicked_count = Position.objects.filter(division__exact=div, state__exact='2').count()
+        affected_count = Position.objects.filter(division__exact=div, state__exact='3').count()
+        division_code = division_code_dic[div]
+        division_name = div
+        row = Row(division_code, division_name, safe_count, panicked_count, affected_count)
+
+        final_list.append(row)
+
 
     result = requests.get('https://corona.lmao.ninja/countries/bangladesh')
     print(type(result.json()))
     print(result.json())
     print("total cases " + str(result.json()['cases']))
+
+    context = {
+        'position': position,
+        'final_list': final_list,
+    }
 
     return render(request, 'home.html', context=context)
 
