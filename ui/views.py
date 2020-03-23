@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Position
+from .tuple_and_dictionaries import *
 
 # Create your views here.
 # def home(request):
@@ -22,5 +23,18 @@ def home(request):
     context = {
         'user_id': position.user_id,
     }
-
+    print(division_code_dic)
+    print(district_code_dic)
+    print(district_division_dic)
     return render(request, 'home.html', context=context)
+
+
+def update(request):
+    lat = float(request.GET.get('lat', None))
+    lng = float(request.GET.get('lng', None))
+    district = request.GET.get('district')
+    division = request.GET.get('division')
+    address = request.GET.get('address')
+    data = {
+    }
+    return JsonResponse(data)

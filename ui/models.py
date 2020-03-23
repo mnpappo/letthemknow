@@ -1,18 +1,5 @@
 from django.db import models
-
-STATE_LIST = (('safe', 'safe'),
-              ('panicked', 'panicked'),
-              ('affected', 'affected'))
-
-DIVISION_LIST = (('dhaka', 'Dhaka'),
-                 ('chittagong', 'Chittagong'),
-                 ('barisal', 'Barisal'),
-                 ('khulna', 'Khulna'),
-                 ('mymensingh', 'Mymensingh'),
-                 ('rajshahi', 'Rajshahi'),
-                 ('rangpur', 'Rangpur'),
-                 ('sylhet', 'Sylhet'),
-                 )
+from .tuple_and_dictionaries import *
 
 
 class Position(models.Model):
