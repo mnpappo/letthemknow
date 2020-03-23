@@ -8,7 +8,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
@@ -39,7 +38,8 @@
           region: 'BD',
           resolution: 'provinces',
           dataMode: 'regions',
-          colors: ['#28a745', '#ffc107', '#dc3545']
+          colors: ['#28a745', '#ffc107', '#dc3545'],
+          legend:  {textStyle: {color: 'blue', fontSize: 16}}
         };
 
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
@@ -154,10 +154,35 @@
         console.log(division)
         console.log(district)
         console.log(address)
+
+        // ajax call
+        $.ajax({
+          url: '{% url 'update' %}',
+          data: {
+            'state': state,
+            'lat': coords.latitude,
+            'lng': coords.longitude,
+            'division': division,
+            'district': district,
+            'address': address
+          },
+          dataType: 'json',
+          success: function (data) {
+            if (data) {
+              console.log(data)
+            } else {
+              console.log("hoi nai");
+            }
+          }
+        });
       }
 
 
       $(document).ready(function(){
+        $('#refresh').click(function(){
+          window.location.reload(true);
+        });
+        
         $(':radio[name="radio-button"]').change(function() {
           var state = $(this).filter(':checked').val();
           if(navigator.geolocation) {
@@ -182,19 +207,19 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        {% comment %} <div class="collapse navbar-collapse" id="navbarsExample02">
-            <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
+        <div class="collapse navbar-collapse" id="navbarsExample02">
+            <ul class="navbar-nav mr-auto justify-content-md-center">
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Info</a>
+              </li>
             </ul>
-            <form class="form-inline my-2 my-md-0">
-                <input class="form-control" type="text" placeholder="Search">
-            </form>
-        </div> {% endcomment %}
+
+            <button id="refresh" type="button" class="btn btn-primary" aria-label="Left Align">
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh
+            </button>
+            
+
+        </div> 
     </nav>
 
     <div class="container-fluid">
