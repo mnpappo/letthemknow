@@ -22,17 +22,10 @@
 
       function drawRegionsMap() {
         // ISO 3166-2 Code
-        var data = google.visualization.arrayToDataTable([
-          ['Provinces', 'City Name' , 'Value',  {role: 'tooltip', p:{html:true}}],
-          ['BD-A', 'Barisal', 21, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-B', 'Chittagong', 324, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-C', 'Dhaka', 900, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-D', 'Khulna', 32, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-H', 'Mymensingh', 456, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-E', 'Rajshahi', 2176, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-F', 'Rangpur', 674, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-          ['BD-G', 'Sylhet', 2123, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
-        ]);
+        console.log({{data2}})
+        var data2 = [{{ ', '.join(data2) }}];
+        console.log(data2)
+        var data = google.visualization.arrayToDataTable(data2);
 
         var options = {
           region: 'BD',
@@ -242,12 +235,8 @@
                     {% endif %}
                   </div>
                 </div>
-
-                {% comment %} {% for row in final_list %}
-                  <p>{{ row.division_code }}, {{ row.division_name }}, {{ row.safe_count }}, {{ row.panicked_count }}, {{ row.affected_count }}</p>
-                {% endfor %} {% endcomment %}
                 
-                
+                {{ data2 }}
                 <div id="regions_div">
 
                 </div>
