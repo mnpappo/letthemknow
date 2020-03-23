@@ -226,6 +226,9 @@
         <h1> User id: {{ position.user_id }}</h1>
         <h1>lat: {{ position.latitude }}</h1>
         <h1>district: {{ position.district }}</h1>
+        {% for row in final_list %}
+            <p>{{ row.division_code }}, {{ row.division_name }}, {{ row.safe_count }}, {{ row.panicked_count }}, {{ row.affected_count }}</p>
+        {% endfor %}
 
         </div> 
     </nav>
