@@ -39,14 +39,14 @@ def home(request):
         a_row = []
         a_row.append(division_code)
         a_row.append(division_name)
-        a_row.append(str(safe_count))
+        a_row.append(safe_count)
         a_row.append('Panicked:'+str(panicked_count)+'<br/ >Affected:'+str(affected_count)+' <br />Safe:'+str(safe_count))
         data_1.append(a_row)
 
         b_row = []
         b_row.append(division_code)
         b_row.append(division_name)
-        b_row.append(str(panicked_count))
+        b_row.append(panicked_count)
         b_row.append('Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + ' <br />Safe:' + str(
             safe_count))
         data_2.append(b_row)
@@ -54,7 +54,7 @@ def home(request):
         c_row = []
         c_row.append(division_code)
         c_row.append(division_name)
-        c_row.append(str(affected_count))
+        c_row.append(affected_count)
         c_row.append('Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + ' <br />Safe:' + str(
             safe_count))
         data_3.append(c_row)
