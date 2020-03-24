@@ -11,8 +11,12 @@
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   
   <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'nprogress.css' %}">
+  <script src="{% static 'nprogress.js' %}"></script>
 
   
   <title>Let Them Know</title>
@@ -24,23 +28,19 @@
       <span class="spinner"></span>
     </div>
   </div>
-  <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Let Them Know</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02"
-      aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <nav class="navbar  bg-dark navbar-dark">
+    <div class="container">
+      <a class="navbar-brand text-primary p-0 py-1" href="/"><i class="fa fa-home fa-lg"></i></a> 
+      <a class="navbar-brand text-primary p-0 py-1" href="/">
+        Let Them Know
+      </a> 
 
-    <div class="collapse navbar-collapse" id="navbarsExample02">
-      <ul class="navbar-nav mr-auto justify-content-md-center">
+      <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#">Info</a>
+          <a class="navbar-text text-primary p-0 py-1" href="/info"><i class="fa fa-info-circle fa-lg"></i></a>
         </li>
       </ul>
 
-      <button id="refresh" type="button" class="btn btn-primary" aria-label="Left Align">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh
-      </button>
     </div>
   </nav>
 
@@ -66,9 +66,13 @@
         </div> {% endcomment %}
 
         <div>
+          <div id="topic" class="alert alert-info small" role="alert">
+            Topic: Covid19 (Coronavirus)
+          </div>
+
           <div id="info" class="alert alert-info small" role="alert">
             {% if position.address and position.user_id %}
-            Location: {{ position.address }}
+            <i class="fa fa-map-marker" aria-hidden="true"></i> {{ position.address }}
             {% else %}
             Please share your location to submit your response.
             {% endif %}
@@ -77,24 +81,24 @@
           <div id="result" class="small"></div>
         </div>
 
-        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+        <ul class="nav nav-tabs nav-justified border-0" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="safe-tab" data-toggle="tab" href="#safe" role="tab" aria-controls="safe"
+            <a class="nav-link active border border-success border-bottom-0" id="safe-tab" data-toggle="tab" href="#safe" role="tab" aria-controls="safe"
               aria-selected="true">Safe</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="panicked-tab" data-toggle="tab" href="#panicked" role="tab" aria-controls="panicked"
+            <a class="nav-link border border-warning border-bottom-0" id="panicked-tab" data-toggle="tab" href="#panicked" role="tab" aria-controls="panicked"
               aria-selected="false">Panicked</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="affected-tab" data-toggle="tab" href="#affected" role="tab" aria-controls="affected"
+            <a class="nav-link border border-danger border-bottom-0" id="affected-tab" data-toggle="tab" href="#affected" role="tab" aria-controls="affected"
               aria-selected="false">Affected</a>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="safe" role="tabpanel" aria-labelledby="safe-tab"></div>
-          <div class="tab-pane fade" id="panicked" role="tabpanel" aria-labelledby="panicked-tab"></div>
-          <div class="tab-pane fade" id="affected" role="tabpanel" aria-labelledby="affected-tab"></div>
+          <div class="tab-pane fade show active border-success" id="safe" role="tabpanel" aria-labelledby="safe-tab"></div>
+          <div class="tab-pane fade border-warning" id="panicked" role="tabpanel" aria-labelledby="panicked-tab"></div>
+          <div class="tab-pane fade border-danger" id="affected" role="tabpanel" aria-labelledby="affected-tab"></div>
         </div>
       </div>
       <div class="col-sm-4">
@@ -361,20 +365,11 @@
         dataType: 'json',
         success: function (data) {
           if (data) {
-            $("#result").html(
-              '<div class="alert alert-success"><button type="button" class="close">×</button>Successfully Updated Record!</div>'
-              );
-            window.setTimeout(function () {
-              $("#result .alert").fadeTo(500, 0).slideUp(500, function () {
-                $(this).remove();
-              });
-            }, 5000);
-
-            $('#result .alert .close').on("click", function (e) {
-              $(this).parent().fadeTo(500, 0).slideUp(500);
-            });
+            NProgress.done();
+            document.getElementById("info").innerHTML = `<i class="fa fa-map-marker" aria-hidden="true"></i> ${data.address}`;
           } else {
             console.log("hoi nai, server gese");
+            NProgress.done();
           }
         }
       });
@@ -382,21 +377,18 @@
 
     $(document).ready(function () {
 
+      NProgress.configure({ parent: '#info' });
+
       $('.carousel').carousel({
         interval: 3000,
         pause: false
       })
 
-      $('#refresh').click(function () {
-        window.location.reload(true);
-      });
-
       $(':radio[name="radio-button"]').change(function () {
+        NProgress.start();
         var state = $(this).filter(':checked').val();
         if (navigator.geolocation) {
-          console.log("clicked")
           main(state);
-
         } else {
           document.getElementById("info").innerHTML = 'Geolocation is not supported by this device';
         }

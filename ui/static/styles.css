@@ -3,13 +3,25 @@ body {
     font-family: 'Fira Sans', sans-serif;
 }
 
-#info {
+
+#topic {
     margin-top: 15px;
 }
 
 .corona_info_stat {
     margin-top: 15px;
 }
+
+
+.nav-tabs .nav-link:not(.active) {
+    border-color: transparent !important;
+}
+.nav-link.active {
+    background-color: #f5f5f5 !important;
+    border-top-left-radius: 0rem; 
+    border-top-right-radius: 0rem;
+}
+
 
 .frb-group {
     margin: 15px 0;
@@ -137,9 +149,9 @@ body {
 
 .frb input[type="radio"]:empty ~ label span.frb-title,
 .frb input[type="checkbox"]:empty ~ label span.frb-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    margin: 10px 80px 5px 20px;
+    margin: 5px 80px 2px 20px;
     display: block;
 }
 
@@ -148,7 +160,7 @@ body {
     font-weight: 400;
     font-size: 13px;
     color: #999;
-    margin: 5px 80px 10px 20px;
+    margin: 2px 80px 5px 20px;
 }
 
 .frb input[type="radio"]:empty:checked ~ label span.frb-description,

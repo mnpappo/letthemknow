@@ -66,6 +66,10 @@ def home(request):
     return render(request, 'home.html', context=context)
 
 
+def info(request):
+    return render (request, 'info.html')
+
+
 def update(request):
     state = request.GET.get('state')
     lat = float(request.GET.get('lat'))
