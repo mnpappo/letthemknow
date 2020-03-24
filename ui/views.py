@@ -4,6 +4,7 @@ from django.template import loader
 from .models import Position
 from .tuple_and_dictionaries import *
 import requests
+import json
 
 
 def home(request):
@@ -14,18 +15,9 @@ def home(request):
         position = Position.objects.get(user_id=user_id)
     request.session['user_id'] = position.user_id
 
-    final_list = []
-    row = []
-    row.append('Provinces')
-    row.append('City Name')
-    row.append('Value')
-    row.append('{role: \'tooltip\', p: {html: true}}')
     data_1 = []
     data_2 = []
     data_3 = []
-    data_1.append(row)
-    data_2.append(row)
-    data_3.append(row)
     position_list = Position.objects.all()
     ['BD-A', 'Barisal', 21, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
     division_list = list(division_code_dic.keys())
@@ -36,27 +28,19 @@ def home(request):
         division_code = division_code_dic[div]
         division_name = div
 
-        a_row = []
-        a_row.append(division_code)
-        a_row.append(division_name)
-        a_row.append(safe_count)
-        a_row.append('Panicked:'+str(panicked_count)+'<br/ >Affected:'+str(affected_count)+' <br />Safe:'+str(safe_count))
+        a_row = [division_code, division_name, safe_count,
+                 'Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + '<br />Safe:' + str(
+                     safe_count)]
         data_1.append(a_row)
 
-        b_row = []
-        b_row.append(division_code)
-        b_row.append(division_name)
-        b_row.append(panicked_count)
-        b_row.append('Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + ' <br />Safe:' + str(
-            safe_count))
+        b_row = [division_code, division_name, panicked_count,
+                 'Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + '<br />Safe:' + str(
+                     safe_count)]
         data_2.append(b_row)
 
-        c_row = []
-        c_row.append(division_code)
-        c_row.append(division_name)
-        c_row.append(affected_count)
-        c_row.append('Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + ' <br />Safe:' + str(
-            safe_count))
+        c_row = [division_code, division_name, affected_count,
+                 'Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + '<br />Safe:' + str(
+                     safe_count)]
         data_3.append(c_row)
 
     # for data in data_1:
