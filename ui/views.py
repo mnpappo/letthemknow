@@ -69,7 +69,13 @@ def home(request):
 
 
 def info(request):
-    return render (request, 'info.html')
+    bangladesh_result = requests.get('https://corona.lmao.ninja/countries/bangladesh')
+    world_result = requests.get('https://corona.lmao.ninja/all')
+    context = {
+        'bangldesh_result': bangladesh_result.json(),
+        'world_result': world_result.json(),
+    }
+    return render(request, 'info.html', context=context)
 
 
 def update(request):
