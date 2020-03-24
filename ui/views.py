@@ -7,6 +7,17 @@ import requests
 import json
 
 
+def eng_to_bang(eng_number):
+    eng = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+    bng = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '০']
+    eng_number = str(eng_number)
+    bng_number = ''
+    for i in range(len(eng_number)):
+        index = eng.index(eng_number[i])
+        bng_number += bng[index]
+    return bng_number
+
+
 def home(request):
     user_id = request.session.get('user_id', 0)
     if user_id == 0:
@@ -51,18 +62,32 @@ def home(request):
     # for data in data_3:
     #     print(data)
 
-    bangladesh_result = requests.get('https://corona.lmao.ninja/countries/bangladesh')
-    world_result = requests.get('https://corona.lmao.ninja/all')
-    # print(result.json())
-    # print("total cases " + str(result.json()['cases']))
+    bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh')).json()
+    # print(bangladesh_result)
+    bangladesh_result['cases'] = eng_to_bang(bangladesh_result['cases'])
+    bangladesh_result['todayCases'] = eng_to_bang(bangladesh_result['todayCases'])
+    bangladesh_result['deaths'] = eng_to_bang(bangladesh_result['deaths'])
+    bangladesh_result['todayDeaths'] = eng_to_bang(bangladesh_result['todayDeaths'])
+    bangladesh_result['recovered'] = eng_to_bang(bangladesh_result['recovered'])
+    bangladesh_result['active'] = eng_to_bang(bangladesh_result['active'])
+    bangladesh_result['critical'] = eng_to_bang(bangladesh_result['critical'])
+    # print(bangladesh_result)
+
+    world_result = (requests.get('https://corona.lmao.ninja/all')).json()
+    # print(world_result)
+
+    world_result['cases'] = eng_to_bang(world_result['cases'])
+    world_result['deaths'] = eng_to_bang(world_result['deaths'])
+    world_result['recovered'] = eng_to_bang(world_result['recovered'])
+    # print(world_result)
 
     context = {
         'position': position,
         'data1': data_1,
         'data2': data_2,
         'data3': data_3,
-        'bangldesh_result': bangladesh_result.json(),
-        'world_result': world_result.json(),
+        'bangldesh_result': bangladesh_result,
+        'world_result': world_result,
     }
 
     return render(request, 'home.html', context=context)
