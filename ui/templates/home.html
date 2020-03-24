@@ -22,9 +22,8 @@
 
       function drawRegionsMap() {
         // ISO 3166-2 Code
-        console.log({{data2}})
-        var data2 = [{{ ', '.join(data2) }}];
-        console.log(data2)
+        console.log({{data2 | safe}})
+        console.log()
         var data = google.visualization.arrayToDataTable(data2);
 
         var options = {
