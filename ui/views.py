@@ -86,7 +86,7 @@ def home(request):
         'data1': data_1,
         'data2': data_2,
         'data3': data_3,
-        'bangldesh_result': bangladesh_result,
+        'bangladesh_result': bangladesh_result,
         'world_result': world_result,
     }
 
