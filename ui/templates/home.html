@@ -44,32 +44,53 @@
     </div>
   </nav>
 
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
       <div class="col-sm-8">
 
-        {% comment %} <div class="corona_info_stat">
+        <div class="corona_info_stat">
           <div id="myCarousel" class="carousel slide vertical" data-ride="carousel">
             <!-- Carousel items -->
             <div class="carousel-inner">
               <div class="active carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">Some Text 1 </div>
+                <div id="info" class="alert alert-info small" role="alert">Topic: Covid19 (Coronavirus)</div>
               </div>
               <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">Some Text 2 </div>
+                <div id="info" class="alert alert-info small" role="alert">(World) Total Cases: {{ world_result.cases }}</div>
               </div>
               <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">Some Text 3 </div>
+                <div id="info" class="alert alert-info small" role="alert">(World) Total Deaths: {{ world_result.deaths }}</div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert">(World) Total Recovered: {{ world_result.recovered }}</div>
+              </div>
+
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Total Cases: {{ bangldesh_result.cases }} </div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Cases Today: {{ bangldesh_result.todayCases }} </div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Total Deaths: {{ bangldesh_result.deaths }} </div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Deaths Today: {{ bangldesh_result.todayDeaths }} </div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Total Recovered: {{ bangldesh_result.recovered }} </div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Active Cases: {{ bangldesh_result.active }} </div>
+              </div>
+              <div class="carousel-item">
+                <div id="info" class="alert alert-info small" role="alert"> (Bangladesh) Critical Cases: {{ bangldesh_result.critical }} </div>
               </div>
             </div>
           </div>
-        </div> {% endcomment %}
+        </div>
 
         <div>
-          <div id="topic" class="alert alert-info small" role="alert">
-            Topic: Covid19 (Coronavirus)
-          </div>
-
           <div id="info" class="alert alert-info small" role="alert">
             {% if position.address and position.user_id %}
             <i class="fa fa-map-marker" aria-hidden="true"></i> {{ position.address }}
@@ -77,19 +98,6 @@
             Please share your location to submit your response.
             {% endif %}
           </div>
-          <h1>World</h1>
-          <p>Total Cases: {{ world_result.cases }}</p>
-          <p>Total Death: {{ world_result.deaths }}</p>
-          <p>Total Recovered: {{ world_result.recovered }}</p>
-          <h1>{{ bangldesh_result.country }}</h1>
-          <p>Total Cases: {{ bangldesh_result.cases }}</p>
-          <p>Today New Cases: {{ bangldesh_result.todayCases }}</p>
-          <p>Total Deaths: {{ bangldesh_result.deaths }}</p>
-          <p>Today deaths: {{ bangldesh_result.todayDeaths }}</p>
-          <p>Total Recovered: {{ bangldesh_result.recovered }}</p>
-          <p>Total Active : {{ bangldesh_result.active }}</p>
-          <p>Critical Cases : {{ bangldesh_result.critical }}</p>
-          <div id="result" class="small"></div>
         </div>
 
         <ul class="nav nav-tabs nav-justified border-0" id="myTab" role="tablist">
