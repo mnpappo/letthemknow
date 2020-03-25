@@ -42,7 +42,7 @@
     </div>
   </nav>
 
-  <div class="container-fluid">
+  <div class="container mt-2">
     <div class="row">
       <div class="col-sm-12">
         <div class="corona_stat_table">
@@ -79,6 +79,12 @@
           </table>
         </div>
       </div>
+
+      <div class="col-sm-12">
+        <div class="alert alert-info small text-center font-weight-bold" role="alert">
+          বাংলাদেশে করোনায় আক্রান্ত ও মৃত্যুর চিত্র (২০ দিন)
+        </div>
+        <canvas id="casesChart" width="100%"></canvas>
     </div>
   </div>
 
@@ -90,6 +96,76 @@
   </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+
+  <!--Load the AJAX API-->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+
+    function drawLineChart() {
+
+      var jsonData = $.ajax({
+        url: 'https://corona.lmao.ninja/v2/historical/Bangladesh',
+        dataType: 'json',
+      }).done(function (results) {
+
+        var cases = results.timeline.cases;
+
+        // Split timestamp and data into separate arrays
+        var labels = [], data=[];
+        Object.keys(cases).forEach(function(key) {
+          labels.push(key);
+          data.push(cases[key]);
+        });
+
+        var deaths = results.timeline.deaths;
+
+        // Split timestamp and data into separate arrays
+        var labels_deaths = [], data_deaths=[];
+        Object.keys(deaths).forEach(function(key) {
+          labels_deaths.push(key);
+          data_deaths.push(deaths[key]);
+        });
+
+        // Get the context of the canvas element we want to select
+        var ctx = document.getElementById("casesChart").getContext("2d");
+
+        var days = 20;
+        function slicearr(data) {
+          return data.slice(Math.max(data.length - days, 0))
+        }
+
+        // Instantiate a new chart
+        var chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: 'line',
+
+          // The data for our dataset
+          data: {
+            labels : slicearr(labels),
+            datasets : [{
+              label: 'আক্রান্ত',
+              borderColor: '#ffc107',
+              data : slicearr(data)
+            },
+            {
+              label: 'মৃত্যু',
+              borderColor: '#dc3545',
+              data : slicearr(data_deaths)
+            }]
+          },
+
+          // Configuration options go here
+          options: {}
+        });
+
+      });
+    }
+
+    drawLineChart();
+
   </script>
   
 </body>
