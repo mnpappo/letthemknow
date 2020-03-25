@@ -45,7 +45,39 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-12">
-        Some info
+        <div class="corona_stat_table">
+          <table class="table small table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" colspan="3" class="text-center font-weight-bold">বিশ্বে</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>মোট আক্রান্ত: {{ world_result.cases }}</td>
+                <td>মৃত্যু: {{ world_result.deaths }}</td>
+                <td>সুস্থ: {{ world_result.recovered }}</td>
+              </tr>
+            </tbody>
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" colspan="3" class="text-center font-weight-bold">বাংলাদেশে</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>মোট আক্রান্ত: {{ bangladesh_result.cases }}</td>
+                <td>আজ আক্রান্ত: {{ bangladesh_result.todayCases }}</td>
+                <td>মোট মৃত্যু: {{ bangladesh_result.deaths }}</td>
+              </tr>
+              <tr>
+                <td>আজ মৃত্যু: {{ bangladesh_result.todayDeaths }}</td>
+                <td>সুস্থ: {{ bangladesh_result.recovered }}</td>
+                <td>বর্তমানে আক্রান্ত: {{ bangladesh_result.active }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
