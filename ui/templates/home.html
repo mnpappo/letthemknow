@@ -84,44 +84,6 @@
                 </tbody>
               </table>
             </div>
-            <h1>Total User: {{ total_user }}</h1>
-            <h1>Total Response: {{ total_response }}</h1>
-            {% comment %} <div class="carousel-inner">
-              <div class="active carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">Topic: Covid19 (Coronavirus)</div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">(বিশ্বে) মোট আক্রান্ত: {{ world_result.cases }} জন</div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">(বিশ্বে) মৃত্যু: {{ world_result.deaths }} জন</div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert">(বিশ্বে) সুস্থ: {{ world_result.recovered }} জন</div>
-              </div>
-
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) মোট আক্রান্ত: {{ bangladesh_result.cases }} জন </div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) আজ আক্রান্ত: {{ bangladesh_result.todayCases }} জন </div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) মোট মৃত্যু: {{ bangladesh_result.deaths }} জন </div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) আজ মৃত্যু: {{ bangladesh_result.todayDeaths }} জন </div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) সুস্থ: {{ bangladesh_result.recovered }} জন </div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) বর্তমানে আক্রান্ত: {{ bangladesh_result.active }} জন </div>
-              </div>
-              <div class="carousel-item">
-                <div id="info" class="alert alert-info small" role="alert"> (বাংলাদেশে) জরুরী অবস্থা: {{ bangladesh_result.critical }} জন </div>
-              </div>
-            </div> {% endcomment %}
           </div>
         </div>
 
@@ -178,21 +140,25 @@
             <input type="radio" id="radio-button-3" name="radio-button" value="3" {% if position.state == '3' %}
               checked="checked" {% endif %}>
             <label for="radio-button-3">
-              <span class="frb-title">I am Affected!!</span>
-              <span class="frb-description">I think I am affected! Help!!</span>
+              <span class="frb-title">I Think, I am Affected!!</span>
+              <span class="frb-description">I am getting CODIV-19 Symtoomps! Help!!</span>
             </label>
           </div>
         </div>
 
-      </div>
+        <div class="alert alert-secondary small" role="alert">
+          Total Responses: {{ total_response }} Persons
+        </div>
 
+      </div>
     </div>
 
 
     <div class="navbar fixed-bottom">
       <div class="btn-group d-flex w-100" role="group">
-        <a href="{% url 'risk-scan' %}" type="button" class="btn btn-secondary w-100"><i class="fa fa-flask" aria-hidden="true"></i> Risk Scan</a>
-        <a href="{% url 'info' %}" type="button" class="btn btn-secondary w-100"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</a>
+        {% comment %} <a href="{% url 'home' %}" type="button" class="btn btn-primary w-100"><i class="fa fa-home" aria-hidden="true"></i> Home</a> {% endcomment %}
+        <a href="{% url 'info' %}" type="button" class="btn btn-primary w-100"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</a>
+        <a href="{% url 'risk-scan' %}" type="button" class="btn btn-info w-100"><i class="fa fa-flask" aria-hidden="true"></i> COVID-19 Test</a>
       </div>
     </div>
   </div>
