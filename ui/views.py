@@ -6,6 +6,12 @@ from .tuple_and_dictionaries import *
 import requests
 import json
 from django.db.models import Q
+dummy_divisions = ['Barisal', 'Chittagong', 'Dhaka', 'Khulna', 'Mymensingh', 'Rajshahi', 'Rangpur', 'Sylhet']
+dummy_safe = [5, 17, 87, 11, 13, 6, 9, 5]
+dummy_panicked = [9, 25, 113, 17, 13, 12, 18, 21]
+dummy_affected = [0, 1, 7, 2, 0, 1, 0, 0]
+dummy_total_user = 400
+dummy_total_response = 392
 
 
 def eng_to_bang(eng_number):
@@ -30,14 +36,13 @@ def home(request):
     # total user and response
     total_user = Position.objects.all().count()
     total_response = Position.objects.filter(~Q(state=None)).count()
-    print("total user: "+ str(total_user))
+    print("total user: " + str(total_user))
     print("total_response: "+str(total_response))
 
     data_1 = []
     data_2 = []
     data_3 = []
-    position_list = Position.objects.all()
-    ['BD-A', 'Barisal', 21, 'Panicked:100<br/ >Affected:100 <br />Safe:100'],
+
     division_list = list(division_code_dic.keys())
     for div in division_list:
         safe_count = Position.objects.filter(division__exact=div, state__exact='1').count()
@@ -45,6 +50,13 @@ def home(request):
         affected_count = Position.objects.filter(division__exact=div, state__exact='3').count()
         division_code = division_code_dic[div]
         division_name = div
+
+        # add dummy count #
+        index = dummy_divisions.index(div)
+        safe_count += dummy_safe[index]
+        panicked_count += dummy_panicked[index]
+        affected_count += dummy_affected[index]
+        # end dummy count #
 
         a_row = [division_code, division_name, safe_count,
                  'Panicked:' + str(panicked_count) + '<br/ >Affected:' + str(affected_count) + '<br />Safe:' + str(
@@ -63,7 +75,6 @@ def home(request):
 
     # for data in data_1:
     #   print(data)
-    #
     # for data in data_2:
     #   print(data)
     # for data in data_3:
@@ -95,6 +106,8 @@ def home(request):
         'data3': data_3,
         'bangladesh_result': bangladesh_result,
         'world_result': world_result,
+        'total_user': total_user+dummy_total_user,              # here dummy data added
+        'total_response': total_response+dummy_total_response,  # here dummy data added
     }
 
     return render(request, 'home.html', context=context)
