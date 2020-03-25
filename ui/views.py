@@ -114,11 +114,27 @@ def home(request):
 
 
 def info(request):
-    bangladesh_result = requests.get('https://corona.lmao.ninja/countries/bangladesh')
-    world_result = requests.get('https://corona.lmao.ninja/all')
+    bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh')).json()
+    # print(bangladesh_result)
+    bangladesh_result['cases'] = eng_to_bang(bangladesh_result['cases'])
+    bangladesh_result['todayCases'] = eng_to_bang(bangladesh_result['todayCases'])
+    bangladesh_result['deaths'] = eng_to_bang(bangladesh_result['deaths'])
+    bangladesh_result['todayDeaths'] = eng_to_bang(bangladesh_result['todayDeaths'])
+    bangladesh_result['recovered'] = eng_to_bang(bangladesh_result['recovered'])
+    bangladesh_result['active'] = eng_to_bang(bangladesh_result['active'])
+    bangladesh_result['critical'] = eng_to_bang(bangladesh_result['critical'])
+    # print(bangladesh_result)
+
+    world_result = (requests.get('https://corona.lmao.ninja/all')).json()
+    # print(world_result)
+
+    world_result['cases'] = eng_to_bang(world_result['cases'])
+    world_result['deaths'] = eng_to_bang(world_result['deaths'])
+    world_result['recovered'] = eng_to_bang(world_result['recovered'])
+    # print(world_result)
     context = {
-        'bangldesh_result': bangladesh_result.json(),
-        'world_result': world_result.json(),
+        'bangldesh_result': bangladesh_result,
+        'world_result': world_result,
     }
     return render(request, 'info.html', context=context)
 
@@ -141,7 +157,7 @@ def update(request):
     district = district.split()[0]
 
     user_id = request.session.get('user_id', None)
-    if user_id == None:
+    if user_id is None:
         position = Position.objects.create(latitude=lat,
                                            longitude=lng,
                                            state=state,
@@ -150,7 +166,6 @@ def update(request):
                                            address=address,
                                            )
     else:
-        print("Etatei")
         position = Position.objects.get(user_id=user_id)
         position.latitude = lat
         position.longitude = lng
