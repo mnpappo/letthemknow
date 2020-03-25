@@ -5,6 +5,7 @@ from .models import Position
 from .tuple_and_dictionaries import *
 import requests
 import json
+from django.db.models import Q
 
 
 def eng_to_bang(eng_number):
@@ -25,6 +26,12 @@ def home(request):
     else:
         position = Position.objects.get(user_id=user_id)
     request.session['user_id'] = position.user_id
+
+    # total user and response
+    total_user = Position.objects.all().count()
+    total_response = Position.objects.filter(~Q(state=None)).count()
+    print("total user: "+ str(total_user))
+    print("total_response: "+str(total_response))
 
     data_1 = []
     data_2 = []
