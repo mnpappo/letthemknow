@@ -10,3 +10,9 @@ class Position(models.Model):
     division = models.CharField(max_length=100, null=True, blank=True)
     district = models.CharField(max_length=100, null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
+
+
+class Stat(models.Model):
+    world_result = models.CharField(max_length=150, null=True, blank=True)
+    bangladesh_result = models.CharField(max_length=300, null=True, blank=True)
+    update_time = models.DateTimeField(auto_now=True)
