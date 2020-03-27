@@ -162,6 +162,69 @@
       </div>
     </div>
   </div>
+
+
+  <!-- Modal - Safe -->
+  <div class="modal fade" id="safeModal" tabindex="-1" role="dialog" aria-labelledby="safeModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white bg-success small">
+          <h6 class="modal-title" id="safeModalTitle">You Feel Safe</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body small">
+          You Feel Safe
+        </div>
+        <div class="modal-footer d-flex w-100">
+          <button type="button" class="btn btn-secondary w-100 btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal - Panicked -->
+  <div class="modal fade" id="panicModal" tabindex="-1" role="dialog" aria-labelledby="panicModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white bg-warning small">
+          <h6 class="modal-title" id="panicModalTitle">You Feel Panicked</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body small">
+          You Feel Panicked
+        </div>
+        <div class="modal-footer d-flex w-100">
+          <button type="button" class="btn btn-secondary w-100 btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal - Affected -->
+  <div class="modal fade" id="affectedModal" tabindex="-1" role="dialog" aria-labelledby="affectedModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white bg-danger small">
+          <h6 class="modal-title" id="affectedModalTitle">You Feel Affected</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body small">
+          You Feel Affected
+        </div>
+        <div class="modal-footer d-flex w-100">
+          <button type="button" class="btn btn-secondary w-100 btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -394,6 +457,15 @@
           if (data) {
             NProgress.done();
             document.getElementById("info").innerHTML = `<i class="fa fa-map-marker" aria-hidden="true"></i> ${data.address}`;
+            if(data.state === '1') {
+              $('#safeModal').modal('show')
+            }
+            if(data.state === '2') {
+              $('#panicModal').modal('show')
+            }
+            if(data.state === '3') {
+              $('#affectedModal').modal('show')
+            }
           } else {
             console.log("hoi nai, server gese");
             NProgress.done();
