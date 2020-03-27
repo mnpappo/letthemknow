@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
-from .models import Position
+from .models import Position, Stat
 from .tuple_and_dictionaries import *
 import requests
 import json
 from django.db.models import Q
+from datetime import datetime
+from datetime import timedelta
+from django.utils import timezone
+
+
 dummy_divisions = ['Barisal', 'Chittagong', 'Dhaka', 'Khulna', 'Mymensingh', 'Rajshahi', 'Rangpur', 'Sylhet']
 dummy_safe = [5, 17, 87, 11, 13, 6, 9, 5]
 dummy_panicked = [9, 25, 113, 17, 13, 12, 18, 21]
@@ -15,6 +20,11 @@ dummy_total_response = 392
 
 
 def eng_to_bang(eng_number):
+    """
+    translate english digit to bangla digit
+    :param eng_number:
+    :return: bng_number
+    """
     eng = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
     bng = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '০']
     eng_number = str(eng_number)
@@ -26,6 +36,12 @@ def eng_to_bang(eng_number):
 
 
 def home(request):
+    """
+    Home view of Let them know app.
+    :param request: nothing
+    :return: position, bangladesh_stat, world_stat
+    """
+    # check user is old or new using previous session data. if new, set the user_id to the session.
     user_id = request.session.get('user_id', 0)
     if user_id == 0:
         position = Position.objects.create()
@@ -36,12 +52,11 @@ def home(request):
     # total user and response
     total_user = Position.objects.all().count()
     total_response = Position.objects.filter(~Q(state=None)).count()
-    print("total user: " + str(total_user))
-    print("total_response: "+str(total_response))
 
-    data_1 = []
-    data_2 = []
-    data_3 = []
+    # generate the data for division wise safe, panicked and affected number for template
+    data_1 = []        # safe list
+    data_2 = []        # panicked list
+    data_3 = []        # affected list
 
     division_list = list(division_code_dic.keys())
     for div in division_list:
@@ -73,15 +88,35 @@ def home(request):
                      safe_count)]
         data_3.append(c_row)
 
-    # for data in data_1:
-    #   print(data)
-    # for data in data_2:
-    #   print(data)
-    # for data in data_3:
-    #     print(data)
+    # get and prepared the statistic of corona virus from 'https://corona.lmao.ninfa/' api.
+    # get the stat from database
+    stat, created = Stat.objects.get_or_create(id=1)
+    # try api fro bangladesh result
+    try:
+        bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh'))
+    except Exception as e:
+        print(e)
+        # get the data from the database
+        bangladesh_result = stat.bangladesh_result
+        # replace the single quote(') with double quote(") for string to json conversion
+        # string dictionary can't be converted to json if key-value are confined with single quote(')
+        bangladesh_result = bangladesh_result.replace("'", '"')
+        bangladesh_result = json.loads(bangladesh_result)
 
-    bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh')).json()
-    # print(bangladesh_result)
+    if bangladesh_result.status_code and bangladesh_result.status_code == 200:
+        bangladesh_result = bangladesh_result.json()
+        if created:
+            stat.bangladesh_result = bangladesh_result
+            stat.save()
+        if stat.update_time + timedelta(minutes=10) < timezone.now():
+            stat.bangladesh_result = bangladesh_result
+            stat.save()
+    else:
+        bangladesh_result = stat.bangladesh_result
+        bangladesh_result = bangladesh_result.replace("'", '"')
+        bangladesh_result = json.loads(bangladesh_result)
+
+    # Translate English Digit to Bangla digit for Bangladesh result
     bangladesh_result['cases'] = eng_to_bang(bangladesh_result['cases'])
     bangladesh_result['todayCases'] = eng_to_bang(bangladesh_result['todayCases'])
     bangladesh_result['deaths'] = eng_to_bang(bangladesh_result['deaths'])
@@ -89,15 +124,36 @@ def home(request):
     bangladesh_result['recovered'] = eng_to_bang(bangladesh_result['recovered'])
     bangladesh_result['active'] = eng_to_bang(bangladesh_result['active'])
     bangladesh_result['critical'] = eng_to_bang(bangladesh_result['critical'])
-    # print(bangladesh_result)
 
-    world_result = (requests.get('https://corona.lmao.ninja/all')).json()
-    # print(world_result)
+    # try api for world_result
+    try:
+        world_result = requests.get('https://corona.lmao.ninja/all')
+    except Exception as e:
+        world_result = stat.world_result
+        world_result = world_result.replace("'", '"')
+        world_result = json.loads(bangladesh_result)
 
+    if world_result.status_code and world_result.status_code == 200:
+        world_result = world_result.json()
+        a = stat.update_time.time()
+        b = stat.update_time + timedelta(minutes=10)
+        c = timezone.now()
+        d = b - c
+        if created:
+            stat.world_result = world_result
+            stat.save()
+        if stat.update_time + timedelta(minutes=10) < timezone.now():
+            stat.world_result = world_result
+            stat.save()
+    else:
+        world_result = stat.world_result
+        world_result = world_result.replace("'", '"')
+        world_result = json.loads(world_result)
+
+    # Translate English Digit to Bangla digit for Bangladesh result
     world_result['cases'] = eng_to_bang(world_result['cases'])
     world_result['deaths'] = eng_to_bang(world_result['deaths'])
     world_result['recovered'] = eng_to_bang(world_result['recovered'])
-    # print(world_result)
 
     context = {
         'position': position,
@@ -106,16 +162,47 @@ def home(request):
         'data3': data_3,
         'bangladesh_result': bangladesh_result,
         'world_result': world_result,
-        'total_user': total_user+dummy_total_user,              # here dummy data added
-        'total_response': total_response+dummy_total_response,  # here dummy data added
+        'total_user': total_user + dummy_total_user,  # here dummy data added
+        'total_response': total_response + dummy_total_response,  # here dummy data added
     }
 
     return render(request, 'home.html', context=context)
 
 
-def info(request):
-    bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh')).json()
-    # print(bangladesh_result)
+def stat_view(request):
+    """
+    prepared and send bangladesh and world stat of corona virus to the template
+    :param request:
+    :return: bangladesh_result, world_result in context
+    """
+    # get and prepared the statistic of corona virus from 'https://corona.lmao.ninfa/' api.
+    stat, created = Stat.objects.get_or_create(id=1)  # get the stat from database
+    # try api fro bangladesh result
+    try:
+        bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh'))
+    except Exception as e:
+        print(e)
+        # get the data from the database
+        bangladesh_result = stat.bangladesh_result
+        # replace the single quote(') with double quote(") for string to json conversion
+        # string dictionary can't be converted to json if key-value are confined with single quote(')
+        bangladesh_result = bangladesh_result.replace("'", '"')
+        bangladesh_result = json.loads(bangladesh_result)
+
+    if bangladesh_result.status_code and bangladesh_result.status_code == 200:
+        bangladesh_result = bangladesh_result.json()
+        if created:
+            stat.bangladesh_result = bangladesh_result
+            stat.save()
+        if stat.update_time + timedelta(minutes=10) < timezone.now():
+            stat.bangladesh_result = bangladesh_result
+            stat.save()
+    else:
+        bangladesh_result = stat.bangladesh_result
+        bangladesh_result = bangladesh_result.replace("'", '"')
+        bangladesh_result = json.loads(bangladesh_result)
+
+    # Translate English Digit to Bangla digit for Bangladesh result
     bangladesh_result['cases'] = eng_to_bang(bangladesh_result['cases'])
     bangladesh_result['todayCases'] = eng_to_bang(bangladesh_result['todayCases'])
     bangladesh_result['deaths'] = eng_to_bang(bangladesh_result['deaths'])
@@ -123,17 +210,36 @@ def info(request):
     bangladesh_result['recovered'] = eng_to_bang(bangladesh_result['recovered'])
     bangladesh_result['active'] = eng_to_bang(bangladesh_result['active'])
     bangladesh_result['critical'] = eng_to_bang(bangladesh_result['critical'])
-    # print(bangladesh_result)
 
-    world_result = (requests.get('https://corona.lmao.ninja/all')).json()
-    # print(world_result)
+    # try api for world_result
+    try:
+        world_result = requests.get('https://corona.lmao.ninja/all')
+    except Exception as e:
+        print(e)
+        world_result = stat.world_result
+        world_result = world_result.replace("'", '"')
+        world_result = json.loads(world_result)
 
+    if world_result.status_code and world_result.status_code == 200:
+        world_result = world_result.json()
+        if created:
+            stat.world_result = world_result
+            stat.save()
+        if stat.update_time + timedelta(minutes=10) < timezone.now():
+            stat.world_result = world_result
+            stat.save()
+    else:
+        world_result = stat.world_result
+        world_result = world_result.replace("'", '"')
+        world_result = json.loads(world_result)
+
+    # Translate English Digit to Bangla digit for Bangladesh result
     world_result['cases'] = eng_to_bang(world_result['cases'])
     world_result['deaths'] = eng_to_bang(world_result['deaths'])
     world_result['recovered'] = eng_to_bang(world_result['recovered'])
-    # print(world_result)
+
     context = {
-        'bangldesh_result': bangladesh_result,
+        'bangladesh_result': bangladesh_result,
         'world_result': world_result,
     }
     return render(request, 'info.html', context=context)
@@ -147,6 +253,11 @@ def risk_scan(request):
 
 
 def update(request):
+    """
+    Update user's location, address, state, district and division data
+    :param request:
+    :return: state, lat, lng, district, division, address
+    """
     state = request.GET.get('state')
     lat = float(request.GET.get('lat'))
     lng = float(request.GET.get('lng'))
