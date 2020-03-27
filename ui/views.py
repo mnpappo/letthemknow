@@ -294,3 +294,62 @@ def update(request):
         'state': position.state,
     }
     return JsonResponse(data)
+
+
+# function for responses
+def bot_stat_result(request):
+    stat, created = Stat.objects.get_or_create(id=1)  # get the stat from database
+    # try api fro bangladesh result
+    try:
+        bangladesh_result = (requests.get('https://corona.lmao.ninja/countries/bangladesh'))
+    except Exception as e:
+        print(e)
+        # get the data from the database
+        bangladesh_result = stat.bangladesh_result
+        # replace the single quote(') with double quote(") for string to json conversion
+        # string dictionary can't be converted to json if key-value are confined with single quote(')
+        bangladesh_result = bangladesh_result.replace("'", '"')
+        bangladesh_result = json.loads(bangladesh_result)
+
+    if bangladesh_result.status_code and bangladesh_result.status_code == 200:
+        bangladesh_result = bangladesh_result.json()
+        if created:
+            stat.bangladesh_result = bangladesh_result
+            stat.save()
+        if stat.update_time + timedelta(minutes=10) < timezone.now():
+            stat.bangladesh_result = bangladesh_result
+            stat.save()
+    else:
+        bangladesh_result = stat.bangladesh_result
+        bangladesh_result = bangladesh_result.replace("'", '"')
+        bangladesh_result = json.loads(bangladesh_result)
+
+    # try api for world_result
+    try:
+        world_result = requests.get('https://corona.lmao.ninja/all')
+    except Exception as e:
+        print(e)
+        world_result = stat.world_result
+        world_result = world_result.replace("'", '"')
+        world_result = json.loads(world_result)
+
+    if world_result.status_code and world_result.status_code == 200:
+        world_result = world_result.json()
+        if created:
+            stat.world_result = world_result
+            stat.save()
+        if stat.update_time + timedelta(minutes=10) < timezone.now():
+            stat.world_result = world_result
+            stat.save()
+    else:
+        world_result = stat.world_result
+        world_result = world_result.replace("'", '"')
+        world_result = json.loads(world_result)
+
+    response = "World Result \n" \
+               "Total Cases: "+str(world_result['cases']) + "\n" +\
+               "Total Deaths: "+str(world_result['deaths']) + "\n" +\
+               "Total recovered: "+str(world_result['recovered'])
+
+    # return a fulfillment response
+    return JsonResponse({'fulfillmentText': response})
