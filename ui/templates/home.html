@@ -215,11 +215,11 @@
           </button>
         </div>
         <div class="modal-body small">
-          You Feel Affected
+          The most common symptoms of COVID-19 are fever, tiredness, and dry cough. If you have these symptoms then please do the <a href="{% url 'risk-scan' %}">Online Covid-19 Test</a> by Apollo Hospital which will guide you in your next step.
         </div>
         <div class="modal-footer d-flex w-100">
-          <button type="button" class="btn btn-secondary w-100 btn-sm" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button>
+          <button type="button" class="btn btn-secondary w-25 btn-sm" data-dismiss="modal">Close</button>
+          <a class="btn btn-info w-100 btn-sm" href="{% url 'risk-scan' %}"><i class="fa fa-flask" aria-hidden="true"></i> Online Covid-19 Test</a>
         </div>
       </div>
     </div>
