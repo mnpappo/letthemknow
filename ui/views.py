@@ -355,7 +355,8 @@ def bot_stat_result(request):
     response = "World Result \n" \
                "Total Cases: "+str(world_result['cases']) + "\n" +\
                "Total Deaths: "+str(world_result['deaths']) + "\n" +\
-               "Total recovered: "+str(world_result['recovered'])
+               "Total recovered: "+str(world_result['recovered']) + "\n\n" +\
+               "Reply 0 for main menu."
 
     # return a fulfillment response
     return JsonResponse({'fulfillmentText': response})
