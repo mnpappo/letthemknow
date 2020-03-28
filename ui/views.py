@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import Position, Stat
 from .tuple_and_dictionaries import *
 import requests
@@ -297,7 +299,11 @@ def update(request):
 
 
 # function for responses
+@csrf_exempt
 def bot_stat_result(request):
+    state = request.GET.get('action')
+    print(state)
+    print(type(state))
     stat, created = Stat.objects.get_or_create(id=1)  # get the stat from database
     # try api fro bangladesh result
     try:
