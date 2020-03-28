@@ -13,6 +13,6 @@ class Position(models.Model):
 
 
 class Stat(models.Model):
-    world_result = models.CharField(max_length=150, null=True, blank=True)
-    bangladesh_result = models.CharField(max_length=300, null=True, blank=True)
+    world_result = models.CharField(max_length=200, null=True, blank=True)
+    bangladesh_result = models.CharField(max_length=500, null=True, blank=True)
     update_time = models.DateTimeField(auto_now=True)
