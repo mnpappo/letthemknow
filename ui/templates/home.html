@@ -175,11 +175,13 @@
           </button>
         </div>
         <div class="modal-body small">
-          You Feel Safe
+          <h6> That’s Great. </h6> <br /> Then please regularly and thoroughly clean your hands with an alcohol-based hand rub or wash them with soap and water 
+          and Maintain at least 1 metre (3 feet) distance between yourself and anyone who is coughing or sneezing.  <br /> <br />
+          <h6>Stay Home, Stay Safe</h6>
         </div>
         <div class="modal-footer d-flex w-100">
           <button type="button" class="btn btn-secondary w-100 btn-sm" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button>
+          {% comment %} <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button> {% endcomment %}
         </div>
       </div>
     </div>
@@ -195,11 +197,14 @@
           </button>
         </div>
         <div class="modal-body small">
-          You Feel Panicked
+          It’s totally ok. <br /> Most of us are now panicked in this situation. Just stay Home as much as possible and please regularly and 
+          thoroughly clean your hands with an alcohol-based hand rub or wash them with soap and water and Maintain at least 1 metre 
+          (3 feet) distance between yourself and anyone who is coughing or sneezing. <br />
+          If you feel worried, you can take a <a href="{% url 'risk-scan' %}">Online Covid-19 Test</a> provided by Apollo Hospital.
         </div>
         <div class="modal-footer d-flex w-100">
-          <button type="button" class="btn btn-secondary w-100 btn-sm" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary w-100 btn-sm">Save changes</button>
+          <button type="button" class="btn btn-secondary w-25 btn-sm" data-dismiss="modal">Close</button>
+          <a class="btn btn-info w-100 btn-sm" href="{% url 'risk-scan' %}"><i class="fa fa-flask" aria-hidden="true"></i> Online Covid-19 Test</a>
         </div>
       </div>
     </div>
